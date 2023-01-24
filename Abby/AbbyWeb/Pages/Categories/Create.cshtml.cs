@@ -19,11 +19,19 @@ namespace AbbyWeb.Pages.Categories
         {
         }
 
-        public async Task<IActionResult> OnPost(Category category)
+        public async Task<IActionResult> OnPost()
         {
-            await _db.Category.AddAsync(category);
-            await _db.SaveChangesAsync();
-            return RedirectToPage("Index");
+            if (Category.Name == Category.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("Category.Name", "Display Order and Name can not be Equal.");
+            }
+            if (ModelState.IsValid)
+            {
+                await _db.Category.AddAsync(Category);
+                await _db.SaveChangesAsync();
+                return RedirectToPage("Index");
+            }
+            return Page();
         }
     }
 }
